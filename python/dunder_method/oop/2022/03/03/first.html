@@ -4,23 +4,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Dunder Methods : A Brotherhood | Expected Space</title>
+<title>The Brotherhood of : __str__ &amp; __repr__ | Expected Space</title>
 <meta name="generator" content="Jekyll v4.1.1" />
-<meta property="og:title" content="Dunder Methods : A Brotherhood" />
+<meta property="og:title" content="The Brotherhood of : __str__ &amp; __repr__" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Understanding Dunder Methods and the difference between __str__ and __repr__. How they help with debugging and the way to reproduce them in your own code." />
 <meta property="og:description" content="Understanding Dunder Methods and the difference between __str__ and __repr__. How they help with debugging and the way to reproduce them in your own code." />
-<link rel="canonical" href="https://snehangsude.github.io/xSpace/python/2022/03/03/first.html" />
-<meta property="og:url" content="https://snehangsude.github.io/xSpace/python/2022/03/03/first.html" />
+<link rel="canonical" href="https://snehangsude.github.io/xSpace/python/dunder_method/oop/2022/03/03/first.html" />
+<meta property="og:url" content="https://snehangsude.github.io/xSpace/python/dunder_method/oop/2022/03/03/first.html" />
 <meta property="og:site_name" content="Expected Space" />
 <meta property="og:image" content="https://snehangsude.github.io/xSpace/images/brotherhood.jpg" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2022-03-03T00:00:00-06:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="twitter:image" content="https://snehangsude.github.io/xSpace/images/brotherhood.jpg" />
-<meta property="twitter:title" content="Dunder Methods : A Brotherhood" />
+<meta property="twitter:title" content="The Brotherhood of : __str__ &amp; __repr__" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-03T00:00:00-06:00","datePublished":"2022-03-03T00:00:00-06:00","description":"Understanding Dunder Methods and the difference between __str__ and __repr__. How they help with debugging and the way to reproduce them in your own code.","headline":"Dunder Methods : A Brotherhood","image":"https://snehangsude.github.io/xSpace/images/brotherhood.jpg","mainEntityOfPage":{"@type":"WebPage","@id":"https://snehangsude.github.io/xSpace/python/2022/03/03/first.html"},"url":"https://snehangsude.github.io/xSpace/python/2022/03/03/first.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-03T00:00:00-06:00","datePublished":"2022-03-03T00:00:00-06:00","description":"Understanding Dunder Methods and the difference between __str__ and __repr__. How they help with debugging and the way to reproduce them in your own code.","headline":"The Brotherhood of : __str__ &amp; __repr__","image":"https://snehangsude.github.io/xSpace/images/brotherhood.jpg","mainEntityOfPage":{"@type":"WebPage","@id":"https://snehangsude.github.io/xSpace/python/dunder_method/oop/2022/03/03/first.html"},"url":"https://snehangsude.github.io/xSpace/python/dunder_method/oop/2022/03/03/first.html"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/xSpace/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://snehangsude.github.io/xSpace/feed.xml" title="Expected Space" /><link rel="shortcut icon" type="image/x-icon" href="/xSpace/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
@@ -91,7 +91,7 @@ window.onload = wrap_img;
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">Dunder Methods :  A Brotherhood</h1><p class="page-description">Understanding Dunder Methods and the difference between `__str__` and `__repr__`. How they help with debugging and the way to reproduce them in your own code.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-03-03T00:00:00-06:00" itemprop="datePublished">
+    <h1 class="post-title p-name" itemprop="name headline">The Brotherhood of : `__str__` &amp; `__repr__`</h1><p class="page-description">Understanding Dunder Methods and the difference between `__str__` and `__repr__`. How they help with debugging and the way to reproduce them in your own code.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-03-03T00:00:00-06:00" itemprop="datePublished">
         Mar 3, 2022
       </time>
        • <span class="read-time" title="Estimated read time">
@@ -105,6 +105,12 @@ window.onload = wrap_img;
       <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
       
         <a class="category-tags-link" href="/xSpace/categories/#python">python</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/xSpace/categories/#dunder_method">dunder_method</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/xSpace/categories/#OOP">OOP</a>
         
       
       </p>
@@ -141,7 +147,11 @@ window.onload = wrap_img;
       </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <!--
+    <ul id="toc" class="section-nav">
+<li class="toc-entry toc-h2"><a href="#The-Difference">The Difference </a></li>
+<li class="toc-entry toc-h2"><a href="#The-Brotherhood">The Brotherhood </a></li>
+<li class="toc-entry toc-h2"><a href="#Conclusion">Conclusion </a></li>
+</ul><!--
 #################################################
 ### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
 #################################################
@@ -150,7 +160,8 @@ window.onload = wrap_img;
 
 <div class="container" id="notebook-container">
         
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Diving in the nitty-gritty details of Python introduces us to Dunder Methods. Dunder means "double underscores" as it starts and ends with two underscores. A dunder method acts as a contract between the Python interpreter and the person who made a particular Python class.</p>
 <p>For example, the len method, it helps us with the length of any given string or list or a dictionary, however, it uses a dunder method <strong>len</strong>. Since the length of something is fundamental to any programming language it was made a built-in method but nonetheless, it internally delegates the task to <strong>len</strong>.</p>
@@ -237,16 +248,21 @@ window.onload = wrap_img;
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>There are quite a few built-in functions that internally use dunder methods to work, such as indexing which uses <code>__getitem__</code>, or print which uses <code>__str__</code>. If you are interested to know about all dunder methods here's a good resource: <a href="https://docs.python.org/3/reference/datamodel.html#special-method-names">Dunder Methods</a>.</p>
 
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="The-Difference">The Difference<a class="anchor-link" href="#The-Difference"> </a></h2><p>Understanding <code>__str__</code> &amp; <code>__repr__</code> allows us greater control for us to not only edit and upgrade classes but also to debug and create libraries. 
+<h2 id="The-Difference">
+<a class="anchor" href="#The-Difference" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Difference<a class="anchor-link" href="#The-Difference"> </a>
+</h2>
+<p>Understanding <code>__str__</code> &amp; <code>__repr__</code> allows us greater control for us to not only edit and upgrade classes but also to debug and create libraries. 
 In a nutshell, if I had to explain to you about <code>__str__</code> or <code>__repr__</code> they both do the same thing i.e. they print an output. <strong>However, <code>__repr__</code> is mostly used by programmers to debug, and <code>__str__</code> is for the users using the program.</strong> Let's dive in to see how exactly are they both different and learn about when to use which!</p>
 
 </div>
@@ -259,7 +275,7 @@ In a nutshell, if I had to explain to you about <code>__str__</code> or <code>__
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">repr</span><span class="p">(</span><span class="s1">&#39;Triceratops&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">repr</span><span class="p">(</span><span class="s1">'Triceratops'</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -274,7 +290,7 @@ In a nutshell, if I had to explain to you about <code>__str__</code> or <code>__
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&#34;&#39;Triceratops&#39;&#34;</pre>
+<pre>"'Triceratops'"</pre>
 </div>
 
 </div>
@@ -292,7 +308,7 @@ In a nutshell, if I had to explain to you about <code>__str__</code> or <code>__
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;Triceratops&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">str</span><span class="p">(</span><span class="s1">'Triceratops'</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -307,7 +323,7 @@ In a nutshell, if I had to explain to you about <code>__str__</code> or <code>__
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&#39;Triceratops&#39;</pre>
+<pre>'Triceratops'</pre>
 </div>
 
 </div>
@@ -318,10 +334,12 @@ In a nutshell, if I had to explain to you about <code>__str__</code> or <code>__
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Looking at the above lines of code, there isn't much difference apart from the fact that <code>repr('Triceratops')</code> throws us an output which is within a double-inverted comma (<code>""</code>) and then the string within a single-inverted (<code>''</code>) comma. As for the <code>str('Triceratops')</code> it's within a single-inverted comma(<code>''</code>). If you ask me, that's not even a difference as both of them do the same exact thing and there isn't much difference.</p>
-<blockquote><p>Let's look at something a bit more interesting.</p>
+<blockquote>
+<p>Let's look at something a bit more interesting.</p>
 </blockquote>
 
 </div>
@@ -398,7 +416,7 @@ In a nutshell, if I had to explain to you about <code>__str__</code> or <code>__
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&#39;2022-03-03 02:10:02.973209&#39;</pre>
+<pre>'2022-03-03 02:10:02.973209'</pre>
 </div>
 
 </div>
@@ -431,7 +449,7 @@ In a nutshell, if I had to explain to you about <code>__str__</code> or <code>__
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&#39;datetime.datetime(2022, 3, 3, 2, 10, 2, 973209)&#39;</pre>
+<pre>'datetime.datetime(2022, 3, 3, 2, 10, 2, 973209)'</pre>
 </div>
 
 </div>
@@ -442,7 +460,8 @@ In a nutshell, if I had to explain to you about <code>__str__</code> or <code>__
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong><em>Fascinating, isn't it!</em></strong>
 While using the <code>datetime</code> library we created a variable <code>current_time</code> which stores as the variable says, the current time. Running a <code>print</code> statement gives us an output that is similar to the output when we use the <code>current_time</code>  variable inside the <code>str()</code> function. A user-friendly output of the variable giving is the    <code>year-month-date hour:minutes:seconds</code>.</p>
@@ -451,9 +470,13 @@ While using the <code>datetime</code> library we created a variable <code>curren
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="The-Brotherhood">The Brotherhood<a class="anchor-link" href="#The-Brotherhood"> </a></h2><p>While it may be intriguing to prefer one over another, truth be told, we need both of them to make sure they cover both cases. The general idea is to make the <code>__repr__</code> function help you as much as you can with maximum details. While the <code>__str__</code> function with the minimum details which a user can read or understand. For example:</p>
+<h2 id="The-Brotherhood">
+<a class="anchor" href="#The-Brotherhood" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Brotherhood<a class="anchor-link" href="#The-Brotherhood"> </a>
+</h2>
+<p>While it may be intriguing to prefer one over another, truth be told, we need both of them to make sure they cover both cases. The general idea is to make the <code>__repr__</code> function help you as much as you can with maximum details. While the <code>__str__</code> function with the minimum details which a user can read or understand. For example:</p>
 <p><strong>Defining a class:</strong></p>
 
 </div>
@@ -472,10 +495,10 @@ While using the <code>datetime</code> library we created a variable <code>curren
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">)'</span><span class="p">)</span>
     
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -539,7 +562,7 @@ While using the <code>datetime</code> library we created a variable <code>curren
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&#39;1&#39;</pre>
+<pre>'1'</pre>
 </div>
 
 </div>
@@ -572,7 +595,7 @@ While using the <code>datetime</code> library we created a variable <code>curren
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&#39;int(1)&#39;</pre>
+<pre>'int(1)'</pre>
 </div>
 
 </div>
@@ -583,19 +606,25 @@ While using the <code>datetime</code> library we created a variable <code>curren
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><div class="flash">
-    <svg class="octicon octicon-info" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm6.5-.25A.75.75 0 017.25 7h1a.75.75 0 01.75.75v2.75h.25a.75.75 0 010 1.5h-2a.75.75 0 010-1.5h.25v-2h-.25a.75.75 0 01-.75-.75zM8 6a1 1 0 100-2 1 1 0 000 2z"></path></svg>
+<p></p>
+<div class="flash">
+    <svg class="octicon octicon-info" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm6.5-.25A.75.75 0 017.25 7h1a.75.75 0 01.75.75v2.75h.25a.75.75 0 010 1.5h-2a.75.75 0 010-1.5h.25v-2h-.25a.75.75 0 01-.75-.75zM8 6a1 1 0 100-2 1 1 0 000 2z"></path></svg>
     <strong>Note: </strong><code>__class__</code> and <code>__name__</code> represents the name of the class the <code>name</code> belongs to.
-</div></p>
+</div>
 
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h2><p>Now that, you have got a grasp into what <code>__repr__</code> &amp; <code>__str__</code> does, you are one step closer to debugging your own code. Try creating a class that gives you all the information using <code>repr()</code> but only the necessary one using <code>str()</code>.</p>
+<h2 id="Conclusion">
+<a class="anchor" href="#Conclusion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conclusion<a class="anchor-link" href="#Conclusion"> </a>
+</h2>
+<p>Now that, you have got a grasp into what <code>__repr__</code> &amp; <code>__str__</code> does, you are one step closer to debugging your own code. Try creating a class that gives you all the information using <code>repr()</code> but only the necessary one using <code>str()</code>.</p>
 <p>If you are interested to know about how <code>datetime</code> wrote their library <code>__repr__</code> and <code>__str__</code> function, you can see the source code <a href="https://github.com/python/cpython/blob/3.10/Lib/datetime.py">here</a>. It might be overwhelming when you look at the code but try to search through the document to find <code>__str__</code> and <code>__repr__</code>. <strong>Hint: <em>Use Ctrl + F</em></strong>. This will give you a broader idea of how these functions are different, yet so similar.</p>
 <p>Oh! Something to note, Jupyter notebooks use <code>__repr__</code> when the output is requested without the <code>print</code> statement.</p>
 
@@ -635,7 +664,8 @@ While using the <code>datetime</code> library we created a variable <code>curren
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>You can view my other articles <a href="https://xspace.hashnode.dev/">here</a>. I would much like to connect with you, if you would like to do so too, please connect with me on <a href="https://twitter.com/_Perceptron_">Twitter</a>.</p>
 
@@ -646,7 +676,15 @@ While using the <code>datetime</code> library we created a variable <code>curren
 
 
 
-  </div><a class="u-url" href="/xSpace/python/2022/03/03/first.html" hidden></a>
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="snehangsude/xSpace"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/xSpace/python/dunder_method/oop/2022/03/03/first.html" hidden></a>
 </article>
 
       </div>
