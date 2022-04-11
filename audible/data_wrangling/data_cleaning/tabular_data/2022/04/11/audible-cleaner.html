@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Audible Data Cleaning | Expected Space</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Audible Data Cleaning" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="After scraping the data from Audible.in, the notebook focuses on cleaning the data prior to moving into Exploratory Data Analysis." />
+<meta property="og:description" content="After scraping the data from Audible.in, the notebook focuses on cleaning the data prior to moving into Exploratory Data Analysis." />
+<link rel="canonical" href="https://snehangsude.github.io/xSpace/audible/data_wrangling/data_cleaning/tabular_data/2022/04/11/audible-cleaner.html" />
+<meta property="og:url" content="https://snehangsude.github.io/xSpace/audible/data_wrangling/data_cleaning/tabular_data/2022/04/11/audible-cleaner.html" />
+<meta property="og:site_name" content="Expected Space" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-04-11T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Audible Data Cleaning" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-04-11T00:00:00-05:00","datePublished":"2022-04-11T00:00:00-05:00","description":"After scraping the data from Audible.in, the notebook focuses on cleaning the data prior to moving into Exploratory Data Analysis.","headline":"Audible Data Cleaning","mainEntityOfPage":{"@type":"WebPage","@id":"https://snehangsude.github.io/xSpace/audible/data_wrangling/data_cleaning/tabular_data/2022/04/11/audible-cleaner.html"},"url":"https://snehangsude.github.io/xSpace/audible/data_wrangling/data_cleaning/tabular_data/2022/04/11/audible-cleaner.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/xSpace/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://snehangsude.github.io/xSpace/feed.xml" title="Expected Space" /><link rel="shortcut icon" type="image/x-icon" href="/xSpace/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/xSpace/">Expected Space</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/xSpace/about/">About Me</a><a class="page-link" href="/xSpace/search/">Search</a><a class="page-link" href="/xSpace/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Audible Data Cleaning</h1><p class="page-description">After scraping the data from <a href='https://www.audible.in/'>Audible.in</a>, the notebook focuses on cleaning the data prior to moving into Exploratory Data Analysis.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-04-11T00:00:00-05:00" itemprop="datePublished">
+        Apr 11, 2022
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      9 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/xSpace/categories/#audible">audible</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/xSpace/categories/#data_wrangling">data_wrangling</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/xSpace/categories/#data_cleaning">data_cleaning</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/xSpace/categories/#tabular_data">tabular_data</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-justify-center">
+          <div class="px-2">
+
+    <a href="https://github.com/snehangsude/xSpace/tree/master/_notebooks/2022-04-11-audible-cleaner.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/xSpace/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/snehangsude/xSpace/master?filepath=_notebooks%2F2022-04-11-audible-cleaner.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/xSpace/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/snehangsude/xSpace/blob/master/_notebooks/2022-04-11-audible-cleaner.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/xSpace/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+          <div class="px-2">
+  <a href="https://deepnote.com/launch?url=https%3A%2F%2Fgithub.com%2Fsnehangsude%2FxSpace%2Fblob%2Fmaster%2F_notebooks%2F2022-04-11-audible-cleaner.ipynb" target="_blank">
+      <img class="notebook-badge-image" src="/xSpace/assets/badges/deepnote.svg" alt="Launch in Deepnote"/>
+  </a>
+</div>
+
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul id="toc" class="section-nav">
+<li class="toc-entry toc-h3"><a href="#Importing-Libraries">Importing Libraries </a></li>
+<li class="toc-entry toc-h3"><a href="#Reading-the-data">Reading the data </a></li>
+<li class="toc-entry toc-h1"><a href="#Cleaning-the-data">Cleaning the data </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Checking-for-duplicates">Checking for duplicates </a></li>
+<li class="toc-entry toc-h3"><a href="#Cleaning-the-author-and-narrator-columns">Cleaning the author and narrator columns </a></li>
+<li class="toc-entry toc-h3"><a href="#Cleaning-the-stars-columns">Cleaning the stars columns </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Changing-Datatypes">Changing Datatypes </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Changing-the-price-column-to-a-float-value">Changing the price column to a float value </a></li>
+<li class="toc-entry toc-h3"><a href="#Changing-the-ratings-column-to-a-float-value">Changing the ratings column to a float value </a></li>
+<li class="toc-entry toc-h3"><a href="#Changing-the-stars-column-to-a-float-value">Changing the stars column to a float value </a></li>
+<li class="toc-entry toc-h3"><a href="#Changing-the-releasedate-to-datetime-object">Changing the releasedate to datetime object </a></li>
+<li class="toc-entry toc-h3"><a href="#Changing-the-time-to-datetime-integer-value-of-only-minutes">Changing the time to datetime integer value of only minutes </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Replacing-the-NaN-values">Replacing the NaN values </a></li>
+<li class="toc-entry toc-h1"><a href="#Saving-the-cleaned-dataset">Saving the cleaned dataset </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2022-04-11-audible-cleaner.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Importing-Libraries">
+<a class="anchor" href="#Importing-Libraries" aria-hidden="true"><span class="octicon octicon-link"></span></a>Importing Libraries<a class="anchor-link" href="#Importing-Libraries"> </a>
+</h3>
+<p>We import <a href="https://pandas.pydata.org/docs/getting_started/index.html">Pandas</a> and <a href="https://numpy.org/doc/stable/user/index.html">Numpy</a> as the two libraries would help us clean, edit and prepare our scraped data. We also import <a href="https://docs.python.org/3/library/warnings.html">Warnings</a>. This notebook focused more on data cleaning and data wrangling. For data exploration you can view the notebook here.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">'ignore'</span><span class="p">)</span> <span class="c1"># ignore any warnings from any code cell</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Reading-the-data">
+<a class="anchor" href="#Reading-the-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reading the data<a class="anchor-link" href="#Reading-the-data"> </a>
+</h3>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'./audible_uncleaned.csv'</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">shape</span> <span class="c1"># Gives use a tuple of (rows, columns)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(87489, 8)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>author</th>
+      <th>narrator</th>
+      <th>time</th>
+      <th>releasedate</th>
+      <th>language</th>
+      <th>stars</th>
+      <th>price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Geronimo Stilton #11 &amp; #12</td>
+      <td>Writtenby:GeronimoStilton</td>
+      <td>Narratedby:BillLobely</td>
+      <td>2 hrs and 20 mins</td>
+      <td>04-08-08</td>
+      <td>English</td>
+      <td>5 out of 5 stars34 ratings</td>
+      <td>468.00</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>The Burning Maze</td>
+      <td>Writtenby:RickRiordan</td>
+      <td>Narratedby:RobbieDaymond</td>
+      <td>13 hrs and 8 mins</td>
+      <td>01-05-18</td>
+      <td>English</td>
+      <td>4.5 out of 5 stars41 ratings</td>
+      <td>820.00</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>The Deep End</td>
+      <td>Writtenby:JeffKinney</td>
+      <td>Narratedby:DanRussell</td>
+      <td>2 hrs and 3 mins</td>
+      <td>06-11-20</td>
+      <td>English</td>
+      <td>4.5 out of 5 stars38 ratings</td>
+      <td>410.00</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Cleaning-the-data">
+<a class="anchor" href="#Cleaning-the-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cleaning the data<a class="anchor-link" href="#Cleaning-the-data"> </a>
+</h1>
+<p>While we have our scraped data, we don't exactly have a cleaner much readable view of our data or the datatypes for the columns we would prefer before diving into analysis and data visulization. Let's start by cleaning our data.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Checking-for-duplicates">
+<a class="anchor" href="#Checking-for-duplicates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Checking for duplicates<a class="anchor-link" href="#Checking-for-duplicates"> </a>
+</h3>
+<p>We use <code>.sum()</code> method as <code>data.duplicated()</code> returns a Pandas Series of boolean values. Summing them up shows how many duplicated values are there.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Cleaning-the-author-and-narrator-columns">
+<a class="anchor" href="#Cleaning-the-author-and-narrator-columns" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cleaning the <code>author</code> and <code>narrator</code> columns<a class="anchor-link" href="#Cleaning-the-author-and-narrator-columns"> </a>
+</h3>
+<p>Removing the <code>Writtenby:</code> and <code>Narratedby:</code> as those values are redundant
+<br></p>
+<ul>
+<li>Selecting the Pandas Series by using <code>data.author</code> </li>
+<li>Then we use the <code>.str</code> method get all the string values </li>
+<li>And finally, we run the <code>replace</code> method with the <code>value_to_be_replaced</code> and the <code>value_to_be_replaced_with</code>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">author</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">author</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'Writtenby:'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">narrator</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">narrator</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'Narratedby:'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>author</th>
+      <th>narrator</th>
+      <th>time</th>
+      <th>releasedate</th>
+      <th>language</th>
+      <th>stars</th>
+      <th>price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>10867</th>
+      <td>The Trust Manifesto</td>
+      <td>DamianBradfield</td>
+      <td>DamianBradfield,RichardHughes,KristinAtherton</td>
+      <td>6 hrs and 54 mins</td>
+      <td>10-10-19</td>
+      <td>English</td>
+      <td>Not rated yet</td>
+      <td>888.00</td>
+    </tr>
+    <tr>
+      <th>34136</th>
+      <td>How to Be a Conscious Eater</td>
+      <td>SophieEgan</td>
+      <td>SophieEgan</td>
+      <td>7 hrs and 15 mins</td>
+      <td>27-04-21</td>
+      <td>English</td>
+      <td>Not rated yet</td>
+      <td>562.00</td>
+    </tr>
+    <tr>
+      <th>6549</th>
+      <td>Els silencis de la boca de la mina [The Silenc...</td>
+      <td>AndreuSotorra</td>
+      <td>JoanMora</td>
+      <td>4 hrs and 3 mins</td>
+      <td>02-01-19</td>
+      <td>catalan</td>
+      <td>Not rated yet</td>
+      <td>537.00</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Cleaning-the-stars-columns">
+<a class="anchor" href="#Cleaning-the-stars-columns" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cleaning the <code>stars</code> columns<a class="anchor-link" href="#Cleaning-the-stars-columns"> </a>
+</h3>
+<p>The <code>stars</code> column has three distinct format of values: 
+<br></p>
+<ol>
+<li><code>5 out of 5 stars34 ratings</code></li>
+<li><code>4.5 out of 5 stars38 ratings</code></li>
+<li>
+<code>Not rated yet</code>
+<br><br>
+</li>
+</ol>
+<ul>
+<li>We handle the <strong>3rd</strong> one efficiently using the Pandas Series and the replace method to replace with NaN values using the numpy library. <em>Note: This doesn't use the <code>str</code> method and hence we use the <code>inplace = True</code></em> </li>
+<li>As for the <strong>1st</strong> and the <strong>2nd</strong> one, we use <a href="https://docs.python.org/3/library/re.html">Regex</a> to split the string into two columns of <code>stars</code> and <code>ratings</code>.<blockquote>
+<p><strong>Note</strong>:I used the <a href="https://regex101.com/">Regex101</a> as guide to use regular expression on the string.</p>
+</blockquote>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">stars</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'Not rated yet'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[[</span><span class="s1">'unknown'</span><span class="p">,</span><span class="s1">'stars'</span><span class="p">,</span> <span class="s1">'ratings'</span><span class="p">]]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">stars</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">'(\d*.?\d\s[a-z]+\s[a-z]+\s\d+\s[a-z]+)'</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'unknown'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># Dropping the unknown column as it only consists of spaces and nan values</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Changing-Datatypes">
+<a class="anchor" href="#Changing-Datatypes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changing Datatypes<a class="anchor-link" href="#Changing-Datatypes"> </a>
+</h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Changing-the-price-column-to-a-float-value">
+<a class="anchor" href="#Changing-the-price-column-to-a-float-value" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changing the <code>price</code> column to a float value<a class="anchor-link" href="#Changing-the-price-column-to-a-float-value"> </a>
+</h3>
+<p>The <code>price</code> column has three distinct values:</p>
+<ol>
+<li><code>Free</code></li>
+<li>3-digit value. Eg:<code>839.00</code>
+</li>
+<li>4-digit value. Eg:<code>1,230.00</code>
+</li>
+</ol>
+<ul>
+<li>We replace <strong>1st</strong> one with <code>0</code>
+</li>
+<li>And for the <strong>3rd</strong> one we remove the <code>,</code> as that blocks us to change the datatype to <code>float</code>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">','</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'Free'</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'float64'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Changing-the-ratings-column-to-a-float-value">
+<a class="anchor" href="#Changing-the-ratings-column-to-a-float-value" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changing the <code>ratings</code> column to a float value<a class="anchor-link" href="#Changing-the-ratings-column-to-a-float-value"> </a>
+</h3>
+<p>The <code>ratings</code> column has one value:</p>
+<ol>
+<li><code>23 ratings</code></li>
+</ol>
+<ul>
+<li>We split the data at the <code>-space-</code> and drop the column which doesn't have the value and then change the datatype to <code>float</code>. <blockquote>
+<p><strong>Note</strong>:Ratings are generally whole numbers but since the column has null values it couldn't be changed to <code>int</code> and hence the choice for <code>float</code></p>
+</blockquote>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[[</span><span class="s1">'ratings'</span><span class="p">,</span> <span class="s1">'unknown'</span><span class="p">]]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">ratings</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'unknown'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">ratings</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">ratings</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">','</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'float64'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Changing-the-stars-column-to-a-float-value">
+<a class="anchor" href="#Changing-the-stars-column-to-a-float-value" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changing the <code>stars</code> column to a float value<a class="anchor-link" href="#Changing-the-stars-column-to-a-float-value"> </a>
+</h3>
+<p>The <code>stars</code> column has one value:</p>
+<ol>
+<li><code>5 out of 5 stars</code></li>
+</ol>
+<ul>
+<li>We split the data at the <code>out</code> and drop the extra column as all the values are rated out of 5 stars and then change the datatype to <code>float</code>. </li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[[</span><span class="s1">'stars'</span><span class="p">,</span> <span class="s1">'unknown'</span><span class="p">]]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">stars</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'out'</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'unknown'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">stars</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">stars</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'float64'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Changing-the-releasedate-to-datetime-object">
+<a class="anchor" href="#Changing-the-releasedate-to-datetime-object" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changing the <code>releasedate</code> to datetime object<a class="anchor-link" href="#Changing-the-releasedate-to-datetime-object"> </a>
+</h3>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">releasedate</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">releasedate</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Changing-the-time-to-datetime-integer-value-of-only-minutes">
+<a class="anchor" href="#Changing-the-time-to-datetime-integer-value-of-only-minutes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changing the <code>time</code> to datetime integer value of only minutes<a class="anchor-link" href="#Changing-the-time-to-datetime-integer-value-of-only-minutes"> </a>
+</h3>
+<p>The <code>time</code> column has 4 distinct values:</p>
+<ol>
+<li><code>1 hr</code></li>
+<li><code>1 min</code></li>
+<li><code>3 hrs and 40 mins</code></li>
+<li><code>Less than 1 minute</code></li>
+</ol>
+<ul>
+<li>For the <strong>4th</strong> option we approx it to <code>1 min</code>
+</li>
+<li>We then replace the <code>hrs</code> to <code>hr</code> and <code>mins</code> to <code>min</code>, as that would help us genaralize it </li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'Less than 1 minute'</span><span class="p">,</span> <span class="s1">'1 min'</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'mins'</span><span class="p">,</span> <span class="s1">'min'</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'hrs'</span><span class="p">,</span> <span class="s1">'hr'</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>author</th>
+      <th>narrator</th>
+      <th>time</th>
+      <th>releasedate</th>
+      <th>language</th>
+      <th>stars</th>
+      <th>price</th>
+      <th>ratings</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Geronimo Stilton #11 &amp; #12</td>
+      <td>GeronimoStilton</td>
+      <td>BillLobely</td>
+      <td>2 hr and 20 min</td>
+      <td>2008-04-08</td>
+      <td>English</td>
+      <td>5.0</td>
+      <td>468.0</td>
+      <td>34.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>The Burning Maze</td>
+      <td>RickRiordan</td>
+      <td>RobbieDaymond</td>
+      <td>13 hr and 8 min</td>
+      <td>2018-01-05</td>
+      <td>English</td>
+      <td>4.5</td>
+      <td>820.0</td>
+      <td>41.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>The Deep End</td>
+      <td>JeffKinney</td>
+      <td>DanRussell</td>
+      <td>2 hr and 3 min</td>
+      <td>2020-06-11</td>
+      <td>English</td>
+      <td>4.5</td>
+      <td>410.0</td>
+      <td>38.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here, we split the <code>time</code> twice, once to separate the <code>hour</code> and again to separate the <code>minutes</code>. This again uses Regex as that makes working with strings extremly easy and handy.</p>
+<blockquote>
+<p><strong>Note</strong>:It's not necessary to split it twice and can be done once by reusing <code>mins</code> however this makes it easier to read and understand.</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[[</span><span class="s1">'unknown'</span><span class="p">,</span> <span class="s1">'hour'</span><span class="p">,</span> <span class="s1">'mins'</span><span class="p">]]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'time'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">'(\d+ hr)'</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'unknown'</span><span class="p">,</span> <span class="s1">'mins'</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[[</span><span class="s1">'hr'</span><span class="p">,</span> <span class="s1">'minutes'</span><span class="p">,</span> <span class="s1">'unknown'</span><span class="p">]]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'time'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">'(\d+ min)'</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'unknown'</span><span class="p">,</span> <span class="s1">'hr'</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote>
+<p><strong>Note</strong>:We see that we have <code>None</code> values and not <code>np.nan</code> values after splitting the string. We use <code>.applymap()</code> to map the <code>lambda</code> function and them sum them up to see the count of <code>None</code> values.
+An easier way to find what values you have in a Pandas Series is to run <code>df.name_of_column.unique()</code> to see all unique values. <br>
+To count the number of unique values in a Pandas Series run <code>df.name_of_column.nunique()</code>.</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>name               0
+author             0
+narrator           0
+time               0
+releasedate        0
+language           0
+stars              0
+price              0
+ratings            0
+hour           13406
+minutes         1343
+dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We fill <code>None</code> values the same as filling <code>Nan</code> values i.e. with <code>fillna()</code></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">hour</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s1">'0 hr'</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">minutes</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s1">'0 min'</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>name           0
+author         0
+narrator       0
+time           0
+releasedate    0
+language       0
+stars          0
+price          0
+ratings        0
+hour           0
+minutes        0
+dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>author</th>
+      <th>narrator</th>
+      <th>time</th>
+      <th>releasedate</th>
+      <th>language</th>
+      <th>stars</th>
+      <th>price</th>
+      <th>ratings</th>
+      <th>hour</th>
+      <th>minutes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Geronimo Stilton #11 &amp; #12</td>
+      <td>GeronimoStilton</td>
+      <td>BillLobely</td>
+      <td>2 hr and 20 min</td>
+      <td>2008-04-08</td>
+      <td>English</td>
+      <td>5.0</td>
+      <td>468.0</td>
+      <td>34.0</td>
+      <td>2 hr</td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>The Burning Maze</td>
+      <td>RickRiordan</td>
+      <td>RobbieDaymond</td>
+      <td>13 hr and 8 min</td>
+      <td>2018-01-05</td>
+      <td>English</td>
+      <td>4.5</td>
+      <td>820.0</td>
+      <td>41.0</td>
+      <td>13 hr</td>
+      <td>8 min</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>The Deep End</td>
+      <td>JeffKinney</td>
+      <td>DanRussell</td>
+      <td>2 hr and 3 min</td>
+      <td>2020-06-11</td>
+      <td>English</td>
+      <td>4.5</td>
+      <td>410.0</td>
+      <td>38.0</td>
+      <td>2 hr</td>
+      <td>3 min</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now that we don't have any null values, we remove the string associated with the numbers - <code>hr</code> from the hour columns and <code>min</code> from the minutes column.
+<br>
+To convert the entire <code>time</code> from <em>hours &amp; minutes</em> --&gt; <em>minutes</em>, we need to multiply the hours by 60 and then add the minutes.</p>
+<ul>
+<li>
+<p>After removing the string object we turn the value to an <code>integer</code> and use the <code>.mulitply()</code> method to multiply the Pandas Series.</p>
+</li>
+<li>
+<p>Finally, we add the <code>minutes</code> and <code>hour</code> column replacing the <code>time</code> column while dropping the <code>hour</code> and <code>minutes</code> column.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">hour</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">hour</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'hr'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">minutes</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">minutes</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'min'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">'time'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">minutes</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">hour</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'hour'</span><span class="p">,</span> <span class="s1">'minutes'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>author</th>
+      <th>narrator</th>
+      <th>time</th>
+      <th>releasedate</th>
+      <th>language</th>
+      <th>stars</th>
+      <th>price</th>
+      <th>ratings</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Geronimo Stilton #11 &amp; #12</td>
+      <td>GeronimoStilton</td>
+      <td>BillLobely</td>
+      <td>140</td>
+      <td>2008-04-08</td>
+      <td>English</td>
+      <td>5.0</td>
+      <td>468.0</td>
+      <td>34.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>The Burning Maze</td>
+      <td>RickRiordan</td>
+      <td>RobbieDaymond</td>
+      <td>788</td>
+      <td>2018-01-05</td>
+      <td>English</td>
+      <td>4.5</td>
+      <td>820.0</td>
+      <td>41.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>The Deep End</td>
+      <td>JeffKinney</td>
+      <td>DanRussell</td>
+      <td>123</td>
+      <td>2020-06-11</td>
+      <td>English</td>
+      <td>4.5</td>
+      <td>410.0</td>
+      <td>38.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Replacing-the-NaN-values">
+<a class="anchor" href="#Replacing-the-NaN-values" aria-hidden="true"><span class="octicon octicon-link"></span></a>Replacing the NaN values<a class="anchor-link" href="#Replacing-the-NaN-values"> </a>
+</h1>
+<p>We are almost done with cleaning our data however we still have <code>Nan</code> values. While we can have <code>NaN</code> values as it could portray the realistic way on how the data is represented but we would evnetually need to replace it with some value when analysing or visulizating the data.</p>
+<p>In majority number of cases, I've seen <code>NaN</code> values being replaced by <code>mean</code> or <code>median</code> which in this case wouldn't be of much help, as the audiobooks doesn't actually have a rating or star. It's much preferable to replace the value with zero.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>name               0
+author             0
+narrator           0
+time               0
+releasedate        0
+language           0
+stars          72417
+price              0
+ratings        72417
+dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We see an equal number of missing values, just as we expected on the <code>stars</code> and <code>ratings</code> column. To replace then with <code>0</code> we can simple write:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can see that we have no missing values now! Great! To check, we can simply run a <code>sample()</code> and it would show us.
+<br>
+<strong>Note</strong>: <code>sample()</code> select a row randomly, you can pass in a value to get that many number of randomly selected rows.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>name           0
+author         0
+narrator       0
+time           0
+releasedate    0
+language       0
+stars          0
+price          0
+ratings        0
+dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>author</th>
+      <th>narrator</th>
+      <th>time</th>
+      <th>releasedate</th>
+      <th>language</th>
+      <th>stars</th>
+      <th>price</th>
+      <th>ratings</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>40951</th>
+      <td>Шейх Мансур</td>
+      <td>АнатолийВиноградов</td>
+      <td>ВсеволодКузнецов</td>
+      <td>61</td>
+      <td>2020-12-21</td>
+      <td>russian</td>
+      <td>0.0</td>
+      <td>99.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>20151</th>
+      <td>Life</td>
+      <td>KeithRichards</td>
+      <td>StephanRemmler</td>
+      <td>400</td>
+      <td>2010-04-11</td>
+      <td>german</td>
+      <td>0.0</td>
+      <td>367.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>51989</th>
+      <td>The Ship of Silence</td>
+      <td>AlbertR.Wetjen</td>
+      <td>JeffHarding</td>
+      <td>52</td>
+      <td>2022-02-18</td>
+      <td>English</td>
+      <td>0.0</td>
+      <td>53.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Finally, we can view the entire infomation of the cleaned DataFrame using <code>.info()</code></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 87489 entries, 0 to 87488
+Data columns (total 9 columns):
+ #   Column       Non-Null Count  Dtype         
+---  ------       --------------  -----         
+ 0   name         87489 non-null  object        
+ 1   author       87489 non-null  object        
+ 2   narrator     87489 non-null  object        
+ 3   time         87489 non-null  int64         
+ 4   releasedate  87489 non-null  datetime64[ns]
+ 5   language     87489 non-null  object        
+ 6   stars        87489 non-null  float64       
+ 7   price        87489 non-null  float64       
+ 8   ratings      87489 non-null  float64       
+dtypes: datetime64[ns](1), float64(3), int64(1), object(4)
+memory usage: 6.0+ MB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Saving-the-cleaned-dataset">
+<a class="anchor" href="#Saving-the-cleaned-dataset" aria-hidden="true"><span class="octicon octicon-link"></span></a>Saving the cleaned dataset<a class="anchor-link" href="#Saving-the-cleaned-dataset"> </a>
+</h1>
+<p>We have cleaned our dataset, and now to save it we use <code>.to_csv()</code> function providing the name of the csv file while setting the <code>index</code> to <code>False</code>.</p>
+<blockquote>
+<p><strong>Important</strong>:Not setting the index to <code>False</code> would generate an extra column in the csv with row numbers i.e. <code>0-87488</code>.</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">'audible_cleaned.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="snehangsude/xSpace"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/xSpace/audible/data_wrangling/data_cleaning/tabular_data/2022/04/11/audible-cleaner.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/xSpace/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/xSpace/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/xSpace/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>A Data Science blog to note down concepts and ideas, chances are I will return here in the near future to re-read my own posts.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/snehangsude" target="_blank" title="snehangsude"><svg class="svg-icon grey"><use xlink:href="/xSpace/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://www.linkedin.com/in/snehangsu-de" target="_blank" title="snehangsu-de"><svg class="svg-icon grey"><use xlink:href="/xSpace/assets/minima-social-icons.svg#linkedin"></use></svg></a></li><li><a rel="me" href="https://twitter.com/_Perceptron_" target="_blank" title="_Perceptron_"><svg class="svg-icon grey"><use xlink:href="/xSpace/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
